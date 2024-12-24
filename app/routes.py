@@ -82,3 +82,43 @@ async def get_puuid_by_riot_id(region: str, summoner_name: str, summoner_tag: st
 
     # Retornar los datos obtenidos como JSON
     return response.json()
+
+# Route to get a summoner's level and icon using a puuid
+@router.get("/puuid/{region}/{puuid}")
+async def get_level_and_icon_by_puuid(region: str, puuid: str):
+    
+    """
+    Obtain a summoner's level and icon using his puuid
+
+    - region: Summoner's region (e.g., "euw1", "eun1").
+    - puuid: A summoner's ID (retrieved using his name and tag).
+    """
+
+    # Make sure the parameters are properly introduced (I could make the front check all this)
+    if not puuid.strip():
+        raise HTTPException(
+            status_code=400,
+            detail="The summoner's puuid cannot be empty."
+        )
+
+    # Build Riot's API URL
+    url = f"https://{region}.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/{puuid}"
+
+    # Configure headers with Riot's API Key
+    headers = {
+        "X-Riot-Token": API_KEY
+    }
+
+    # Make HTTP request to Riot's API
+    async with httpx.AsyncClient() as client:
+        response = await client.get(url, headers=headers)
+
+    # Handle errors
+    if response.status_code != 200:
+        raise HTTPException(
+            status_code=response.status_code,
+            detail=f"Error: {response.json().get('status', {}).get('message', 'Unknown error')}"
+        )
+
+    # Retornar los datos obtenidos como JSON
+    return response.json()

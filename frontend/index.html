@@ -1,23 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Name of this HTML page -->
     <title>Riot API Data</title>
-    <link rel="stylesheet" href="css/styles.css">
+
+    <!-- Indicate where the styling file is located -->
+    <link rel="stylesheet" href="home-page.css">
+
 </head>
+
 <body>
-    <div id="app">
-        <h1>Summoner Information</h1>
-        <form id="search-form">
-            <input type="text" id="summoner-name" placeholder="Summoner Name" required>
-            <input type="text" id="summoner-tag" placeholder="Summoner Tag" required>
-            <button type="submit">Search</button>
-        </form>
-        <div id="summoner-info">
-            <!-- Aquí se mostrarán los datos del invocador -->
-        </div>
+    
+    <!-- Home Page Header -->
+    <h1>Summoner Information:</h1>
+
+    <!-- Search Form -->
+    <form id="search-form">
+        <input type="text" id="summoner-name" placeholder="Name">
+        <input type="text" id="summoner-tag" placeholder="Tag">
+        <button id="fetch-data">Obtain ID</button>
+    </form>
+
+    <!-- Result -->
+    <div id="result">
     </div>
-    <script src="js/app.js"></script>
+
+    <!-- JavaScript to be executed -->
+    <script src="home-page.js"></script>
+
 </body>
+
 </html>
