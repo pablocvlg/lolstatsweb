@@ -5,13 +5,14 @@ import SearchForm from "./SearchForm";
 import { useNavigate } from "react-router-dom";
 
 const SearchPage: React.FC = () => {
-  
-//   const [summonerLevel, setSummonerLevel] = useState<number | null>(null);
-//   const [profileIconUrl, setProfileIconUrl] = useState<string | null>(null);
 
   const navigate = useNavigate();
 
-  const handleSearch = async (summonerName: string, summonerTag: string) => {
+  const handleSearch = async (summonerInfo: string) => {
+    
+    // Separate the summoner name and the tag
+    const [summonerName, summonerTag] = summonerInfo.split("#");
+    
     // Build the url using the parameters introduced by the user
     const puuidUrl = `http://localhost:8000/puuid/europe/${summonerName}/${summonerTag}`;
     

@@ -2,20 +2,19 @@ import React, { useState } from "react";
 import { Box, TextField, Button } from "@mui/material";
 
 interface SearchFormProps {
-  onSearch: (summonerName: string, summonerTag: string) => void;
+  onSearch: (summonerInfo: string) => void;
 }
 
 const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
-  const [summonerName, setSummonerName] = useState("");
-  const [summonerTag, setSummonerTag] = useState("");
+  const [summonerInfo, setSummonerInfo] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!summonerName || !summonerTag) {
+    if (!summonerInfo) {
       alert("Please enter both the summoner's name and tag.");
       return;
     }
-    onSearch(summonerName, summonerTag);
+    onSearch(summonerInfo);
   };
 
   return (
@@ -35,19 +34,25 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
       }}
     >
       <TextField
-        label="Summoner Name"
-        variant="outlined"
-        fullWidth
-        value={summonerName}
-        onChange={(e) => setSummonerName(e.target.value)}
-        sx={{marginTop: "10px"}}
-      />
-      <TextField
-        label="Summoner Tag"
-        variant="outlined"
-        fullWidth
-        value={summonerTag}
-        onChange={(e) => setSummonerTag(e.target.value)}
+        label="SUMMONER NAME + #TAG"
+        variant="filled"
+        value={summonerInfo}
+        onChange={(e) => setSummonerInfo(e.target.value)}
+        slotProps={{
+          inputLabel: {
+            style: {
+              visibility: summonerInfo ? "hidden" : "visible", // Hide label when there's text
+            },
+          },
+        }}
+        focused={summonerInfo.length > 0} // Make label stay in place instead of moving upwards
+        sx={{
+          marginTop: "10px",
+          width: "70%",
+          "& input": {
+            padding: "13px", // Adjust padding for the input itself
+          },
+        }}
       />
       <Button
         type="submit"
