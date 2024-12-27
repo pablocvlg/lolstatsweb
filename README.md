@@ -11,3 +11,6 @@ pip install fastapi httpx python-dotenv uvicorn
 
 # Command to start the application, must be used inside ./app
 uvicorn main:app --reload
+
+# To load the frontend, from the ./frontend directory
+npm run dev
