@@ -36,7 +36,7 @@ def api_status():
         "message": "The API is working."
     }
 
-# Route to get a summoner's Puuid using this Riot ID
+# Route to get a summoner's Puuid using his in-game name and his tag
 @router.get("/puuid/{region}/{summoner_name}/{summoner_tag}")
 async def get_puuid_by_riot_id(region: str, summoner_name: str, summoner_tag: str):
     
@@ -83,12 +83,12 @@ async def get_puuid_by_riot_id(region: str, summoner_name: str, summoner_tag: st
     # Retornar los datos obtenidos como JSON
     return response.json()
 
-# Route to get a summoner's level and icon using a puuid
-@router.get("/puuid/{region}/{puuid}")
+# Route to get summoner's info (level and icon) using a puuid
+@router.get("/profile-info/{region}/{puuid}")
 async def get_level_and_icon_by_puuid(region: str, puuid: str):
     
     """
-    Obtain a summoner's level and icon using his puuid
+    Obtain summoner's info (level and icon) using his puuid
 
     - region: Summoner's region (e.g., "euw1", "eun1").
     - puuid: A summoner's ID (retrieved using his name and tag).
@@ -103,6 +103,86 @@ async def get_level_and_icon_by_puuid(region: str, puuid: str):
 
     # Build Riot's API URL
     url = f"https://{region}.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/{puuid}"
+
+    # Configure headers with Riot's API Key
+    headers = {
+        "X-Riot-Token": API_KEY
+    }
+
+    # Make HTTP request to Riot's API
+    async with httpx.AsyncClient() as client:
+        response = await client.get(url, headers=headers)
+
+    # Handle errors
+    if response.status_code != 200:
+        raise HTTPException(
+            status_code=response.status_code,
+            detail=f"Error: {response.json().get('status', {}).get('message', 'Unknown error')}"
+        )
+
+    # Retornar los datos obtenidos como JSON
+    return response.json()
+
+# Route to get a summoner's match history using a puuid
+@router.get("/matches/{region}/{puuid}")
+async def get_lmatch_history_by_puuid(region: str, puuid: str):
+    
+    """
+    Obtain a summoner's match history (matches' ids) using his puuid
+
+    - region: Summoner's region (e.g., "europe", "americas").
+    - puuid: A summoner's ID (retrieved using his name and tag).
+    """
+
+    # Make sure the parameters are properly introduced (I could make the front check all this)
+    if not puuid.strip():
+        raise HTTPException(
+            status_code=400,
+            detail="The summoner's puuid cannot be empty."
+        )
+
+    # Build Riot's API URL
+    url = f"https://{region}.api.riotgames.com/lol/match/v5/matches/by-puuid/{puuid}/ids"
+
+    # Configure headers with Riot's API Key
+    headers = {
+        "X-Riot-Token": API_KEY
+    }
+
+    # Make HTTP request to Riot's API
+    async with httpx.AsyncClient() as client:
+        response = await client.get(url, headers=headers)
+
+    # Handle errors
+    if response.status_code != 200:
+        raise HTTPException(
+            status_code=response.status_code,
+            detail=f"Error: {response.json().get('status', {}).get('message', 'Unknown error')}"
+        )
+
+    # Retornar los datos obtenidos como JSON
+    return response.json()
+
+# Route to get a match's details using its ID
+@router.get("/match/{region}/{match_id}")
+async def get_match_details(region: str, match_id: str):
+    
+    """
+    Obtain a match's details using its ID
+
+    - region: Summoner's region (e.g., "europe", "americas").
+    - match_id: Match's ID
+    """
+
+    # Make sure the parameters are properly introduced (I could make the front check all this)
+    if not match_id.strip():
+        raise HTTPException(
+            status_code=400,
+            detail="The match's ID cannot be empty."
+        )
+
+    # Build Riot's API URL
+    url = f"https://{region}.api.riotgames.com/lol/match/v5/matches/{match_id}"
 
     # Configure headers with Riot's API Key
     headers = {

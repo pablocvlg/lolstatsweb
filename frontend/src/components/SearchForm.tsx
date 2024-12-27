@@ -22,7 +22,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
       component="form"
       onSubmit={handleSubmit}
       sx={{
-        width: 500,
+        width: 550,
         margin: "0 auto",
         padding: 4,
         borderRadius: 8,
@@ -30,7 +30,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
         backgroundColor: "rgba(244, 244, 244, 0.75)",
         display: "flex",
         flexDirection: "column",
-        gap: 2,
+        gap: 3,
       }}
     >
       <TextField
@@ -48,7 +48,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
         focused={summonerInfo.length > 0} // Make label stay in place instead of moving upwards
         sx={{
           marginTop: "10px",
-          width: "70%",
+          width: "100%",
           "& input": {
             padding: "13px", // Adjust padding for the input itself
           },
