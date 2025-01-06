@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Box, TextField, Button } from "@mui/material";
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 
 interface SearchFormProps {
   onSearch: (summonerInfo: string) => void;
@@ -23,7 +24,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
       onSubmit={handleSubmit}
       sx={{
         width: 550,
-        margin: "0 auto",
+        margin: "0 auto 10px auto",
         padding: 4,
         borderRadius: 8,
         boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
@@ -34,7 +35,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
       }}
     >
       <TextField
-        label="SUMMONER NAME + #TAG"
+        label="Sumonner Name + #TAG"
         variant="filled"
         value={summonerInfo}
         onChange={(e) => setSummonerInfo(e.target.value)}
@@ -52,6 +53,21 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
           "& input": {
             padding: "13px", // Adjust padding for the input itself
           },
+          "& .MuiInputLabel-root": {
+            color: "rgba(0, 0, 0, 0.7)", // Darker label color (adjust the opacity or use solid colors)
+            fontWeight: "bold", // Optional: Make label bold
+          },
+          "& .MuiInputLabel-root.Mui-focused": {
+            color: "rgba(0, 0, 0, 0.4)", // Make label fully opaque when focused
+          },
+          "& input:-webkit-autofill": {
+            WebkitBoxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", // Set background color
+            WebkitTextFillColor: "black", // Text color
+            transition: "background-color 5000s ease-in-out 0s", // Prevent flashing
+          },
+          "& .MuiFilledInput-root.Mui-focused:after": {
+            borderBottom: "2px solid black", // Focused state line
+          },
         }}
       />
       <Button
@@ -61,12 +77,17 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
             backgroundColor: "#c06918",
             color: "white",
             alignSelf: "center",
-            width: "50%",
-            padding: "10px",
-            marginTop: "10px"
+            width: "35%",
+            padding: "15px 10px 10px 18px",
+            marginTop: "10px",
+            fontFamily: "MedievalSharp",
+            fontWeight: 700,
+            fontSize: 15,
+            borderRadius: 7
         }}
         >
         Search
+        <KeyboardDoubleArrowRightIcon sx={{ marginLeft: 1, marginBottom: 0.4, fontSize: 20 }} />
       </Button>
     </Box>
   );

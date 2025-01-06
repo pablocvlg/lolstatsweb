@@ -34,9 +34,6 @@ const SearchPage: React.FC = () => {
           const detailsData = await detailsResponse.json();
           const summonerLevel = detailsData.summonerLevel;
           const profileIconUrl = `https://ddragon-webp.lolmath.net/latest/img/profileicon/${detailsData.profileIconId}.webp`;
-        //   const summonerInfo = { summonerLevel: summonerLevel, profileIconUrl: profileIconUrl };
-        //   // Store summoner's details in the session storage to retreive them later
-        //   sessionStorage.setItem('summonerInfo', JSON.stringify(summonerInfo));
           const matchHistoryUrl = `http://localhost:8000/matches/europe/${puuid}`;
           const matchHistoryResponse = await fetch(matchHistoryUrl);
 
@@ -93,7 +90,7 @@ const SearchPage: React.FC = () => {
 
   return (
     <>
-      <Box sx={{ background: "url('gallery/background.jpg') no-repeat center center/cover", minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+      <Box sx={{ background: "url('gallery/background.jpg') no-repeat center center/cover", minHeight: "95vh", display: "flex", flexDirection: "column", justifyContent: "center" }}>
         <Typography fontSize={110} align="center" color="white" sx={{ fontFamily: "MedievalSharp", fontWeight: 700 }}>NOSTALGIA</Typography>
         <SearchForm onSearch={handleSearch} />
       </Box>
