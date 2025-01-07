@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Typography } from "@mui/material";
 
 interface NavBarProps {
-  height: string; // Ejemplo: "60px" o "10vh"
+  height: string;
 }
 
 const NavBar: React.FC<NavBarProps> = ({ height }) => {
@@ -19,7 +19,6 @@ const NavBar: React.FC<NavBarProps> = ({ height }) => {
         borderBottom: "1px solid black"
       }}
     >
-      {/* Contenedor del Logo o Título */}
       <Box
         sx={{
           display: "flex",
@@ -36,13 +35,12 @@ const NavBar: React.FC<NavBarProps> = ({ height }) => {
         </Typography>
       </Box>
 
-      {/* Contenedor del Desarrollador */}
       <Box
         sx={{
           display: "flex",
-          flexDirection: "row", // Coloca los elementos en fila
-          alignItems: "center", // Centra horizontalmente
-          textAlign: "center", // Alinea texto al centro
+          flexDirection: "row",
+          alignItems: "center",
+          textAlign: "center",
         }}
       >
         <Typography
