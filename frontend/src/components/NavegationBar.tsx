@@ -16,6 +16,7 @@ const NavBar: React.FC<NavBarProps> = ({ height }) => {
         alignItems: "center",
         justifyContent: "space-between",
         padding: "0 20px",
+        borderBottom: "1px solid black"
       }}
     >
       {/* Contenedor del Logo o Título */}
