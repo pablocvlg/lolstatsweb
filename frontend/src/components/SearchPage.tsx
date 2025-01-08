@@ -20,101 +20,156 @@ const SearchPage: React.FC = () => {
     setLoading(true);
     // Set loading progress to 0
     setProgress(0);
-
     // Separate the summoner name and the tag
     const [summonerName, summonerTag] = summonerInfo.split("#");
-    
     // Build the url using the parameters introduced by the user
     const puuidUrl = `http://localhost:8000/puuid/europe/${summonerName}/${summonerTag}`;
-    
+    // Set loading progress to 10%
+    setProgress(10);
+
     try {
-      // Obtain summoner's puuid
-      const response = await fetch(puuidUrl);
-      
-      if (response.ok) {
-        // Save puuid and build the url to obtain the summoner's details
-        const data = await response.json();
-        const puuid = data.puuid;
-        const summonerDetailsUrl = `http://localhost:8000/profile-info/euw1/${puuid}`;
-        // Obtain summoner's details
-        const detailsResponse = await fetch(summonerDetailsUrl);
+      // Step 1: Obtain summoner's puuid
+      const puuid = await getPuuid(puuidUrl);
 
-        if (detailsResponse.ok) {
-          // Save summoner's details
-          const detailsData = await detailsResponse.json();
-          const summonerLevel = detailsData.summonerLevel;
-          const profileIconUrl = `https://ddragon-webp.lolmath.net/latest/img/profileicon/${detailsData.profileIconId}.webp`;
-          const matchHistoryUrl = `http://localhost:8000/matches/europe/${puuid}`;
-          const matchHistoryResponse = await fetch(matchHistoryUrl);
+      // If puuid is not obtained, stop the process
+      if (!puuid) {
+          setLoading(false);
+          alert("Error fetching PUUID.");
+          return;
+      }
 
-          if (matchHistoryResponse.ok) {
-            const matchHistoryData = await matchHistoryResponse.json();
+      // Set loading progress to 20%
+      setProgress(20);
 
-            // Set loading progress to 30%
-            setProgress(30);
+      // Step 2: Obtain summoner's profile details
+      const profileDetails = await getProfileDetails(puuid);
 
-            // Loop through the match history and fetch details for each match
-            const matchDetailsPromises = matchHistoryData.map(async (matchId: string) => {
-                try {
-                    const matchDetailUrl = `http://localhost:8000/match/europe/${matchId}`;
-                    const matchDetailResponse = await fetch(matchDetailUrl);
+      // Set loading progress to 30%
+      setProgress(30);
 
-                    if (matchDetailResponse.ok) {
-                        return await matchDetailResponse.json();
-                    } else {
-                        console.error(`Error fetching details for match ${matchId}`);
-                        setLoading(false);
-                        return null;
-                    }
-                } catch (error) {
-                    console.error("Error fetching match details:", error);
-                    setLoading(false);
+      // Obtain summoner's entries
+      const summonerEntries = await getSummonerEntries(profileDetails.id);
+
+      // Set loading progress to 40%
+      setProgress(40);
+
+      // Step 3: Obtain match history
+      const matchHistory = await getMatchHistory(puuid);
+
+      // Set loading progress to 50%
+      setProgress(50);
+
+      // Step 4: Fetch match details
+      const detailedMatchHistory = await getMatchDetails(matchHistory);
+
+      // Set loading progress to 80%
+      setProgress(80);
+
+      // Step 5: Store the data in the session
+      saveSummonerData(profileDetails, summonerEntries, detailedMatchHistory);
+
+      // Set loading progress to 100%
+      setProgress(100);
+
+      // Navigate to the summoner view page
+      navigate(`/summoner/${encodeURIComponent(summonerName)}-${summonerTag}`);
+
+    } catch (error) {
+        // Handle other errors
+        console.error("Error:", error);
+        setLoading(false);
+        alert("Error connecting to the server.");
+    }
+  };
+
+  // Function to get PUUID
+  const getPuuid = async (puuidUrl: string) => {
+    try {
+        const response = await fetch(puuidUrl);
+        if (response.ok) {
+          const data = await response.json();
+          return data.puuid;
+        }
+    } catch (error) {
+        console.error("Error fetching PUUID:", error);
+    }
+    return null;
+  };
+
+  // Function to get profile details
+  const getProfileDetails = async (puuid: string) => {
+    const profileDetailsUrl = `http://localhost:8000/profile-info/euw1/${puuid}`;
+    try {
+        const response = await fetch(profileDetailsUrl);
+        if (response.ok) {
+            return await response.json();
+        }
+    } catch (error) {
+        console.error("Error fetching profile details:", error);
+    }
+  };
+
+  // Function to get summoner entries
+  const getSummonerEntries = async (summoner_id: string) => {
+    const profileDetailsUrl = `http://localhost:8000/entries/euw1/${summoner_id}`;
+    try {
+        const response = await fetch(profileDetailsUrl);
+        if (response.ok) {
+            return await response.json();
+        }
+    } catch (error) {
+        console.error("Error fetching summoner entries:", error);
+    }
+  };
+
+  // Function to get match history
+  const getMatchHistory = async (puuid: string) => {
+    const matchHistoryUrl = `http://localhost:8000/matches/europe/${puuid}`;
+    try {
+        const response = await fetch(matchHistoryUrl);
+        if (response.ok) {
+            return await response.json();
+        }
+    } catch (error) {
+        console.error("Error fetching match history:", error);
+    }
+  };
+
+  // Function to fetch match details
+  const getMatchDetails = async (matchHistoryData: any) => {
+    try {
+        // Assuming match history is already fetched and passed
+        const matchDetailPromises = matchHistoryData.map(async (matchId: string) => {
+            try {
+                const matchDetailUrl = `http://localhost:8000/match/europe/${matchId}`;
+                const matchDetailResponse = await fetch(matchDetailUrl);
+                if (matchDetailResponse.ok) {
+                    return await matchDetailResponse.json();
+                } else {
+                    console.error(`Error fetching details for match ${matchId}`);
                     return null;
                 }
-            });
+            } catch (error) {
+                console.error("Error fetching match history details:", error);
+                return null;
+            }
+        });
 
-            // Set loading progress to 80%
-            setProgress(80);
-    
-            // Wait for all match details to be fetched
-            const matchDetails = await Promise.all(matchDetailsPromises);
-
-            // Set loading progress to 90%
-            setProgress(90);
-
-            // Combine all data into one variable
-            const summonerInfo = {
-            summonerLevel,
-            profileIconUrl,
-            matchDetails: matchDetails
-            };
-
-            // Set loading progress to 90%
-            setProgress(95);
-
-            // Store summoner's details in the session storage to retreive them later
-            sessionStorage.setItem('summonerInfo', JSON.stringify(summonerInfo));
-          }
-          // Set loading progress to 100%
-          setProgress(100);
-          // Navigate to the summoner view page
-          navigate(`/summoner/${encodeURIComponent(summonerName)}-${summonerTag}`);
-        } else {
-          // Obtained puuid but can't obtain summoner details
-          setLoading(false);
-          alert("Error fetching summoner details.");
-        }
-      } else {
-        // Can't obtain puuid
-        setLoading(false);
-        alert("Error fetching PUUID.");
-      }
+        return await Promise.all(matchDetailPromises);
     } catch (error) {
-      // Other errors
-      console.error("Error:", error);
-      setLoading(false);
-      alert("Error connecting to the server.");
+        console.error("Error fetching match details:", error);
     }
+  };
+
+  // Function to save summoner data to session storage
+  const saveSummonerData = async (profileDetails: any, summonerEntries: any, matchDetails: any) => {
+    const summonerInfo = {
+        profileDetails: profileDetails,
+        summonerEntries: summonerEntries,
+        matchDetails: matchDetails,
+    };
+
+    sessionStorage.setItem('summonerInfo', JSON.stringify(summonerInfo));
   };
 
   return (

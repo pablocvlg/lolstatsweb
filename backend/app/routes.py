@@ -125,7 +125,7 @@ async def get_level_and_icon_by_puuid(region: str, puuid: str):
 
 # Route to get a summoner's match history using a puuid
 @router.get("/matches/{region}/{puuid}")
-async def get_lmatch_history_by_puuid(region: str, puuid: str):
+async def get_match_history_by_puuid(region: str, puuid: str):
     
     """
     Obtain a summoner's match history (matches' ids) using his puuid
@@ -183,6 +183,46 @@ async def get_match_details(region: str, match_id: str):
 
     # Build Riot's API URL
     url = f"https://{region}.api.riotgames.com/lol/match/v5/matches/{match_id}"
+
+    # Configure headers with Riot's API Key
+    headers = {
+        "X-Riot-Token": API_KEY
+    }
+
+    # Make HTTP request to Riot's API
+    async with httpx.AsyncClient() as client:
+        response = await client.get(url, headers=headers)
+
+    # Handle errors
+    if response.status_code != 200:
+        raise HTTPException(
+            status_code=response.status_code,
+            detail=f"Error: {response.json().get('status', {}).get('message', 'Unknown error')}"
+        )
+
+    # Retornar los datos obtenidos como JSON
+    return response.json()
+
+# Route to get the entires for a summoner
+@router.get("/entries/{region}/{summoner_id}")
+async def get_summoner_entries(region: str, summoner_id: str):
+    
+    """
+    Obtain a match's details using its ID
+
+    - region: Summoner's region (e.g., "euw1", "na1").
+    - summoner_id: A summoner's encrypted ID
+    """
+
+    # Make sure the parameters are properly introduced (I could make the front check all this)
+    if not summoner_id.strip():
+        raise HTTPException(
+            status_code=400,
+            detail="The summoner's encrypted ID cannot be empty."
+        )
+
+    # Build Riot's API URL
+    url = f"https://{region}.api.riotgames.com/lol/league/v4/entries/by-summoner/{summoner_id}"
 
     # Configure headers with Riot's API Key
     headers = {

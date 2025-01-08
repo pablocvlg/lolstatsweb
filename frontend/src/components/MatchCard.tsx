@@ -83,10 +83,11 @@ const MatchCard: React.FC<{ match: { metadata: { matchId: string }; info: any } 
     function getChampionIconUrl(championId: string) {
         return `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/${championId}.png`;
     }
-    const championIconUrl = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/${championId}.png`;
-
-    // Get champion name
-    const championName = info.participants[participantIndex].championName;
+    
+    // Get summoner spell icon URL
+    function getSummonerSpellIconUrl(summonerId: string) {
+        return `https://lolcdn.darkintaqt.com/cdn/spells/${summonerId}`;
+    }
 
     return (
         <Card sx={{ border: "3px solid black", borderRadius: "15px", margin: '2vh 0vh 2vh 0vh', height: "17vh", width: "100%" }}>
@@ -109,17 +110,17 @@ const MatchCard: React.FC<{ match: { metadata: { matchId: string }; info: any } 
                     </Grid>
                     {/* Grid 2 */}
                     <Grid item xs={1} sx={{ padding: 2, height: "16vh" }}>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
+                        <Grid container spacing={2} alignItems="center" justifyContent="center">
+                            <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
                                 <Box sx={{ position: "relative", display: "inline-block" }}>
                                     <Avatar alt="Champion Icon" src={getChampionIconUrl(championId)} sx={{ width: "8vh", height: "8vh" }}/>
                                     <Typography sx={{ position: "absolute", bottom: "1%", right: "1%", backgroundColor: "rgba(51, 51, 51)", color: "#fff", padding: "2px 4px 1px 3px", borderRadius: "20px", fontSize: "0.9rem" }}>14</Typography>
                                 </Box>
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
                                 <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
-                                    <Typography>FL</Typography>
-                                    <Typography>TP</Typography>
+                                    <img alt="Summoner Spell 1" src={getSummonerSpellIconUrl(info.participants[participantIndex].summoner1Id)} style={{ width: "3vh", height: "3vh", borderRadius: "4px" }}/>
+                                    <img alt="Summoner Spell 2" src={getSummonerSpellIconUrl(info.participants[participantIndex].summoner2Id)} style={{ width: "3vh", height: "3vh", borderRadius: "4px" }}/>
                                 </Box>
                             </Grid>
                         </Grid>
