@@ -1,8 +1,18 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Avatar, Box, Card, CardContent, Divider, Grid, Typography } from "@mui/material";
 
 const MatchCard: React.FC<{ match: { metadata: { matchId: string }; info: any } }> = ({ match }) => {
+
+    const [runesData, setRunesData] = useState<any[]>([]);
+
+    useEffect(() => {
+      // Load Runes Pathing JSON
+      fetch("/info/runesPathing.json")
+        .then((response) => response.json())
+        .then((data) => setRunesData(data))
+        .catch((error) => console.error("Error loading runes JSON:", error));
+    }, []);
 
     const formatDuration = (seconds: number): string => {
         const minutes = Math.floor(seconds / 60);
@@ -86,53 +96,95 @@ const MatchCard: React.FC<{ match: { metadata: { matchId: string }; info: any } 
         return `https://lolcdn.darkintaqt.com/cdn/spells/${summonerId}`;
     }
 
+    const getRuneIconPathById = (runeId: number): string | undefined => {
+        for (const path of runesData) {
+          for (const slot of path.slots) {
+            const rune = slot.runes.find((rune: any) => rune.id === runeId);
+            if (rune) {
+              return rune.icon;
+            }
+          }
+        }
+        return undefined; // Si no se encuentra el icono
+    };
+
+    // Get the main rune icon URL
+    function getMainRuneIconUrl() {
+        const mainRuneId = info.participants[participantIndex].perks.styles[0].selections[0].perk;
+        // Rune Pathing JSON
+        const mainRuneIconPath = getRuneIconPathById(mainRuneId);
+        const mainRuneUrl = `https://ddragon.leagueoflegends.com/cdn/img/${mainRuneIconPath}`;
+        return mainRuneUrl;
+    }
+
+    const getRuneTreeIconPathById = (treeId: number): string | undefined => {
+        const tree = runesData.find((tree: any) => tree.id === treeId);
+        return tree ? tree.icon : undefined;
+    };
+
+    // Get the secondary rune tree icon URL
+    function getSecondaryRuneTreeIconUrl() {
+        const secondaryRuneTreeId = info.participants[participantIndex].perks.styles[1].style;
+        // Rune Pathing JSON
+        const secondaryRuneTreeIconPath = getRuneTreeIconPathById(secondaryRuneTreeId);
+        const secondaryRuneTreeUrl = `https://ddragon.leagueoflegends.com/cdn/img/${secondaryRuneTreeIconPath}`;
+        return secondaryRuneTreeUrl;
+    }
+
     return (
-        <Card sx={{ border: "3px solid black", borderRadius: "15px", margin: '2vh 0vh 2vh 0vh', height: "17vh", width: "100%" }}>
+        <Card sx={{
+            border: participantResult === "WIN" ? "3px solid rgba(65, 131, 232)" : participantResult === "LOSS" ? "3px solid rgba(232, 59, 66)" : "3px solid gray",
+            borderRadius: "15px",
+            margin: '2vh 0vh 2vh 0vh',
+            height: "160px",
+            width: "100%"
+        }}>
             <CardContent sx={{
-                backgroundColor: participantResult === "WIN" ? "rgba(0, 223, 208)" : participantResult === "LOSS" ? "rgba(256, 130, 130)" : "gray",
-                height: "17vh",
+                backgroundColor: participantResult === "WIN" ? "rgba(45, 57, 110)" : participantResult === "LOSS" ? "rgba(89, 52, 59)" : "gray",
+                height: "160px",
                 padding: "0 0 0 0"
             }}>
                 <Grid container spacing={2} alignItems="center" gap={1} sx={{ margin: "0vh 0vh 0vh 0vh"}}>
                     {/* Grid 1 */}
-                    <Grid item xs={2.5} sx={{ padding: 2, height: "16vh" }}>
-                        <Typography sx={{ textAlign: 'center', fontWeight: 700 }}>{getGameMode(info.queueId)}</Typography>
-                        <Typography sx={{ textAlign: 'center' }}>a day ago</Typography>
+                    <Grid item xs={2.5} sx={{ padding: "0px 0px 0px 0px", height: "150px" }}>
+                        <Typography sx={{ textAlign: 'center', fontSize: '1rem', fontWeight: 700, color: participantResult === "WIN" ? "rgba(65, 131, 232)" : participantResult === "LOSS" ? "rgba(232, 59, 66)" : "black" }}>{getGameMode(info.queueId)}</Typography>
+                        <Typography sx={{ textAlign: 'center', fontSize: '0.9rem', color: 'rgba(150, 145, 135)' }}>a day ago</Typography>
                         <Divider sx={{ marginY: 1.5 }} />
                         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
-                            <Typography sx={{ textAlign: 'center', fontWeight: 700 }}>{participantResult}</Typography>
-                            <Typography sx={{ textAlign: 'center' }}>+21 LP</Typography>
+                            <Typography sx={{ textAlign: 'center', fontWeight: 700, color: participantResult === "WIN" ? "rgba(65, 131, 232)" : participantResult === "LOSS" ? "rgba(232, 59, 66)" : "black" }}>{participantResult}</Typography>
+                            <Typography sx={{ textAlign: 'center', color: 'rgba(150, 145, 135)', fontSize: '0.9rem' }}>{formatDuration(info.gameDuration)}</Typography>
                         </Box>
-                        <Typography sx={{ textAlign: 'center' }}>{formatDuration(info.gameDuration)}</Typography>
                     </Grid>
                     {/* Grid 2 */}
-                    <Grid item xs={1} sx={{ padding: 2, height: "16vh" }}>
+                    <Grid item xs={1} sx={{ padding: 2, height: "150px" }}>
                         <Grid container spacing={2} alignItems="center" justifyContent="center">
                             <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
                                 <Box sx={{ position: "relative", display: "inline-block" }}>
-                                    <Avatar alt="Champion Icon" src={getChampionIconUrl(championId)} sx={{ width: "8vh", height: "8vh" }}/>
+                                    <Avatar alt="Champion Icon" src={getChampionIconUrl(championId)} sx={{ width: "73px", height: "73px" }}/>
                                     <Typography sx={{ position: "absolute", bottom: "1%", right: "1%", backgroundColor: "rgba(51, 51, 51)", color: "#fff", padding: "2px 4px 1px 3px", borderRadius: "20px", fontSize: "0.9rem" }}>14</Typography>
                                 </Box>
                             </Grid>
                             <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
                                 <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
-                                    <img alt="Summoner Spell 1" src={getSummonerSpellIconUrl(info.participants[participantIndex].summoner1Id)} style={{ width: "3vh", height: "3vh", borderRadius: "4px" }}/>
-                                    <img alt="Summoner Spell 2" src={getSummonerSpellIconUrl(info.participants[participantIndex].summoner2Id)} style={{ width: "3vh", height: "3vh", borderRadius: "4px" }}/>
+                                    <img alt="Summoner Spell 1" src={getSummonerSpellIconUrl(info.participants[participantIndex].summoner1Id)} style={{ width: "30px", height: "30px", borderRadius: "4px" }}/>
+                                    <img alt="Summoner Spell 2" src={getSummonerSpellIconUrl(info.participants[participantIndex].summoner2Id)} style={{ width: "30px", height: "30px", borderRadius: "4px" }}/>
                                 </Box>
                             </Grid>
                         </Grid>
                     </Grid>
                     {/* Grid 3 */}
-                    <Grid item xs={5} sx={{ padding: 2, height: "16vh" }}>
+                    <Grid item xs={4.55} sx={{ padding: 2, height: "150px" }}>
                         <Grid container spacing={2} alignItems="center">
                             <Grid item xs={4}>
-                                <Typography>GRASP</Typography>
-                                <Typography>SORCERY</Typography>
+                                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
+                                    <img src={getMainRuneIconUrl()} alt="Main Rune" style={{ width: "34px", height: "34px", marginTop: "5px", backgroundColor: "rgba(41, 41, 41)", borderRadius: "20px" }}/>
+                                    <img src={getSecondaryRuneTreeIconUrl()} alt="Secondary Rune Tree" style={{ width: "26px", height: "26px", marginTop: "5px", marginLeft: "4px" }}/>
+                                </Box>
                             </Grid>
                             <Grid item xs={8}>
                                 <Box sx={{ display: 'flex', gap: 1 }}>
-                                    <Typography>K/D/A</Typography>
-                                    <Typography>3.00:1 KDA</Typography>
+                                    <Typography sx={{ fontWeight: 700 }}>K/D/A</Typography>
+                                    <Typography sx={{ fontWeight: 700 }}>3.00:1 KDA</Typography>
                                 </Box>
                                 <Typography>222CS (8.1 Cs/pm)</Typography>
                             </Grid>
@@ -160,7 +212,7 @@ const MatchCard: React.FC<{ match: { metadata: { matchId: string }; info: any } 
                         </Grid>
                     </Grid>
                     {/* Grid 4 */}
-                    <Grid item xs={3} sx={{ padding: 2, height: "16vh" }}>
+                    <Grid item xs={3.5} sx={{ padding: 2, height: "150px" }}>
                         <Grid container spacing={1} alignItems="center">
                             {/* Grid Equipo Azul */}
                             <Grid item xs={6}>
