@@ -30,11 +30,35 @@ const SummonerView: React.FC = () => {
   const storedData = sessionStorage.getItem('summonerInfo');
   const searchData = storedData ? JSON.parse(storedData) : null;
 
+  // Function to obtain the ranks
+  const romanToInt = (roman: string): number => {
+    switch (roman) {
+      case "I":
+        return 1;
+      case "II":
+        return 2;
+      case "III":
+        return 3;
+      case "IV":
+        return 4;
+      default:
+        return 0;  // En caso de que el valor no sea válido
+    }
+  };
+
   // Retrieve profile details
   const profileIconUrl = `https://ddragon-webp.lolmath.net/latest/img/profileicon/${searchData.profileDetails.profileIconId}.webp`;
   const summonerLevel = searchData.profileDetails.summonerLevel;
-
-  console.log(searchData.summonerEntries[0].rank);
+  const soloDuoTierCaps = searchData.summonerEntries[0].tier;
+  const soloDuoTier = soloDuoTierCaps.charAt(0).toUpperCase() + soloDuoTierCaps.slice(1).toLowerCase();
+  const soloDuoTierBadgeUrl = `https://wiki.leagueoflegends.com/en-us/images/Season_2023_-_${soloDuoTier}.png`;
+  const soloDuoRankRoman = searchData.summonerEntries[0].rank;
+  const soloDuoRank = romanToInt(soloDuoRankRoman);
+  const flexTierCaps = searchData.summonerEntries[1].tier;
+  const flexTier = soloDuoTierCaps.charAt(0).toUpperCase() + soloDuoTierCaps.slice(1).toLowerCase();
+  const flexTierBadgeUrl = `https://wiki.leagueoflegends.com/en-us/Category:Season_2023_rank_badges#/media/File:Season_2023_-_${flexTier}.png`;
+  const flexDuoRankRoman = searchData.summonerEntries[1].rank;
+  const flexDuoRank = romanToInt(soloDuoRankRoman);
 
   return (
     <>
@@ -45,18 +69,23 @@ const SummonerView: React.FC = () => {
             <div style={{ flexGrow: 1, overflow: "auto", display: "flex", justifyContent: "center", alignItems: "center" }}>
               <Box sx={{ height: "20vh", width: "45%", borderRadius: "60px", display: "flex", flexDirection: "row", justifyContent: "start", alignItems: "center",  backgroundColor: "rgba(0, 0, 0, 0.8)" }}>
                 <Grid container spacing={0} alignItems="center">
-                    <Grid item xs={ 2.5 } sx={{ padding: 0, height: "100%" }}>
-                      <Box sx={{ position: "relative", display: "inline-block" }}>
-                        {profileIconUrl && (<Avatar alt="Summoner Icon" src={profileIconUrl} sx={{ marginLeft: "10vh", width: 100, height: 100 }}/>)}
-                        {summonerLevel !== null && (<Typography sx={{ position: "absolute", bottom: "1%", right: "1%", backgroundColor: "rgba(51, 51, 51)", color: "#fff", padding: "2px 4px 1px 3px", borderRadius: "20px", fontSize: "0.9rem" }}>{summonerLevel}</Typography>)}
-                      </Box>
-                    </Grid>
-                    <Grid item xs={ 7 } sx={{ padding: 0, height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                      <Typography color="white">{summonerName}#{summonerTag}</Typography>
-                    </Grid>
-                    <Grid item xs={ 2.5 } sx={{ padding: 0, height: "100%", display: "flex", justifyContent: "start", alignItems: "center" }}>
-                      <Typography color="white">{searchData.summonerEntries[0].tier} {searchData.summonerEntries[0].rank}</Typography>
-                    </Grid>
+                  <Grid item xs={ 3 } sx={{ padding: 0, height: "100%" }}>
+                    <Box sx={{ position: "relative", display: "inline-block" }}>
+                      {profileIconUrl && (<Avatar alt="Summoner Icon" src={profileIconUrl} sx={{ marginLeft: "10vh", width: 100, height: 100 }}/>)}
+                      {summonerLevel !== null && (<Typography sx={{ position: "absolute", bottom: "1%", right: "1%", backgroundColor: "rgba(51, 51, 51)", color: "#fff", padding: "2px 4px 1px 3px", borderRadius: "20px", fontSize: "0.9rem" }}>{summonerLevel}</Typography>)}
+                    </Box>
+                  </Grid>
+                  <Grid item xs={ 6 } sx={{ padding: 0, height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                    <Typography sx={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 400, fontStyle: "italic", fontSize: "3rem" }} color="white">{summonerName}#{summonerTag}</Typography>
+                  </Grid>
+                  <Grid item xs={3} sx={{ padding: 0, height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                    <Box sx={{ position: "relative", display: "inline-block", textAlign: "center", width: "100%", marginLeft: "-40%" }}>
+                      <img alt="Tier Badge" src={soloDuoTierBadgeUrl} style={{ height: "15vh", width: "15vh", transform: "translateY(-10%)" }} />
+                      <Typography sx={{ position: "absolute", bottom: "5%", left: "50%", transform: "translateX(-50%)", width: "100%", fontWeight: 700 }} color="white">
+                        {searchData.summonerEntries[0].tier} {searchData.summonerEntries[0].rank}
+                      </Typography>
+                    </Box>
+                  </Grid>
                 </Grid>
               </Box>
             </div>

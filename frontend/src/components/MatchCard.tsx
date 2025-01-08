@@ -72,9 +72,6 @@ const MatchCard: React.FC<{ match: { metadata: { matchId: string }; info: any } 
             ? (matchWinner === "blue" ? "WIN" : "LOSS")
         : (participantIndex >= 5 && participantIndex <= 9)
             ? (matchWinner === "blue" ? "LOSS" : "WIN") : "";
-    
-    console.log(info);
-    console.log("Match number" + metadata.matchId + " winner: " + matchWinner);
 
     // Get champion ID
     const championId = info.participants[participantIndex].championId;
@@ -98,7 +95,7 @@ const MatchCard: React.FC<{ match: { metadata: { matchId: string }; info: any } 
             }}>
                 <Grid container spacing={2} alignItems="center" gap={1} sx={{ margin: "0vh 0vh 0vh 0vh"}}>
                     {/* Grid 1 */}
-                    <Grid item xs={2.5 } sx={{ padding: 2, height: "16vh" }}>
+                    <Grid item xs={2.5} sx={{ padding: 2, height: "16vh" }}>
                         <Typography sx={{ textAlign: 'center', fontWeight: 700 }}>{getGameMode(info.queueId)}</Typography>
                         <Typography sx={{ textAlign: 'center' }}>a day ago</Typography>
                         <Divider sx={{ marginY: 1.5 }} />
