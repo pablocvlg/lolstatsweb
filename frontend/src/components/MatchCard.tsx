@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { Avatar, Box, Card, CardContent, Grid, Typography } from "@mui/material";
+import { Avatar, Box, Card, CardContent, Divider, Grid, Typography } from "@mui/material";
 
 const MatchCard: React.FC<{ match: { metadata: { matchId: string }; info: any } }> = ({ match }) => {
 
@@ -89,30 +89,32 @@ const MatchCard: React.FC<{ match: { metadata: { matchId: string }; info: any } 
     const championName = info.participants[participantIndex].championName;
 
     return (
-        <Card sx={{ border: "3px solid black", borderRadius: "15px", margin: '2vh 0vh 2vh 0vh', height: "20vh", width: "100%" }}>
+        <Card sx={{ border: "3px solid black", borderRadius: "15px", margin: '2vh 0vh 2vh 0vh', height: "17vh", width: "100%" }}>
             <CardContent sx={{
-                backgroundColor: participantResult === "WIN" ? "blue" : participantResult === "LOSS" ? "red" : "gray",
-                border: "1px solid blue",
-                height: "22.5vh",
+                backgroundColor: participantResult === "WIN" ? "rgba(0, 223, 208)" : participantResult === "LOSS" ? "rgba(256, 130, 130)" : "gray",
+                height: "17vh",
                 padding: "0 0 0 0"
             }}>
-                <Grid container spacing={2} alignItems="center" gap={1} sx={{ margin: "2vh 0vh 2vh 0vh"}}>
+                <Grid container spacing={2} alignItems="center" gap={1} sx={{ margin: "0vh 0vh 0vh 0vh"}}>
                     {/* Grid 1 */}
-                    <Grid item xs={2.5 } sx={{ border: '1px solid black', padding: 2, height: "16vh" }}>
-                        <Typography sx={{ textAlign: 'center' }}>{getGameMode(info.queueId)}</Typography>
+                    <Grid item xs={2.5 } sx={{ padding: 2, height: "16vh" }}>
+                        <Typography sx={{ textAlign: 'center', fontWeight: 700 }}>{getGameMode(info.queueId)}</Typography>
                         <Typography sx={{ textAlign: 'center' }}>a day ago</Typography>
-                        <Typography sx={{ textAlign: 'center' }}>+21 LP</Typography>
+                        <Divider sx={{ marginY: 1.5 }} />
                         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
                             <Typography sx={{ textAlign: 'center', fontWeight: 700 }}>{participantResult}</Typography>
-                            <Typography sx={{ textAlign: 'center' }}>{formatDuration(info.gameDuration)}</Typography>
+                            <Typography sx={{ textAlign: 'center' }}>+21 LP</Typography>
                         </Box>
+                        <Typography sx={{ textAlign: 'center' }}>{formatDuration(info.gameDuration)}</Typography>
                     </Grid>
                     {/* Grid 2 */}
-                    <Grid item xs={1} sx={{ border: '1px solid black', padding: 2, height: "16vh" }}>
-                        <Grid container spacing={2} alignItems="center">
+                    <Grid item xs={1} sx={{ padding: 2, height: "16vh" }}>
+                        <Grid container spacing={2}>
                             <Grid item xs={12}>
-                                <Avatar alt="Champion Icon" src={getChampionIconUrl(championId)} sx={{ width: "5vh", height: "5vh" }}/>
-                                <Typography>lvl14</Typography>
+                                <Box sx={{ position: "relative", display: "inline-block" }}>
+                                    <Avatar alt="Champion Icon" src={getChampionIconUrl(championId)} sx={{ width: "8vh", height: "8vh" }}/>
+                                    <Typography sx={{ position: "absolute", bottom: "1%", right: "1%", backgroundColor: "rgba(51, 51, 51)", color: "#fff", padding: "2px 4px 1px 3px", borderRadius: "20px", fontSize: "0.9rem" }}>14</Typography>
+                                </Box>
                             </Grid>
                             <Grid item xs={12}>
                                 <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
@@ -123,7 +125,7 @@ const MatchCard: React.FC<{ match: { metadata: { matchId: string }; info: any } 
                         </Grid>
                     </Grid>
                     {/* Grid 3 */}
-                    <Grid item xs={5} sx={{ border: '1px solid black', padding: 2, height: "16vh" }}>
+                    <Grid item xs={5} sx={{ padding: 2, height: "16vh" }}>
                         <Grid container spacing={2} alignItems="center">
                             <Grid item xs={4}>
                                 <Typography>GRASP</Typography>
@@ -160,7 +162,7 @@ const MatchCard: React.FC<{ match: { metadata: { matchId: string }; info: any } 
                         </Grid>
                     </Grid>
                     {/* Grid 4 */}
-                    <Grid item xs={3} sx={{ border: '1px solid black', padding: 2, height: "16vh" }}>
+                    <Grid item xs={3} sx={{ padding: 2, height: "16vh" }}>
                         <Grid container spacing={1} alignItems="center">
                             {/* Grid Equipo Azul */}
                             <Grid item xs={6}>

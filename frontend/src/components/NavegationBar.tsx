@@ -15,7 +15,7 @@ const NavBar: React.FC<NavBarProps> = ({ height }) => {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        padding: "0 20px",
+        padding: "5px 25px 0px 25px",
         borderBottom: "1px solid black"
       }}
     >

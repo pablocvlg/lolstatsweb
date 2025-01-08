@@ -5,7 +5,7 @@ import MatchCard from "./MatchCard";
 
 const SummonerView: React.FC = () => {
   // Navigation bar height
-  const navBarHeight = "10vh";
+  const navBarHeight = "25vh";
 
   //Obtain the information from the URL
   const { summonerInfo } = useParams();
