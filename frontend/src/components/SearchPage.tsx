@@ -22,10 +22,7 @@ const SearchPage: React.FC = () => {
     setProgress(0);
 
     // Separate the summoner name and the tag
-    const [summonerName, lowerCaseSummonerTag] = summonerInfo.split("#");
-
-    // Make the tag's characters uppercase
-    const summonerTag = lowerCaseSummonerTag.toUpperCase();
+    const [summonerName, summonerTag] = summonerInfo.split("#");
     
     // Build the url using the parameters introduced by the user
     const puuidUrl = `http://localhost:8000/puuid/europe/${summonerName}/${summonerTag}`;
