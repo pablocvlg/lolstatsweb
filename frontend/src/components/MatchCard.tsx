@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Avatar, Box, Card, CardContent, Divider, Grid, Typography } from "@mui/material";
+import { Padding } from "@mui/icons-material";
 
 const MatchCard: React.FC<{ match: { metadata: { matchId: string }; info: any } }> = ({ match }) => {
 
     const [runesData, setRunesData] = useState<any[]>([]);
+    const [itemsData, setItemsData] = useState<any[]>([]);
 
     useEffect(() => {
       // Load Runes Pathing JSON
@@ -12,6 +14,11 @@ const MatchCard: React.FC<{ match: { metadata: { matchId: string }; info: any } 
         .then((response) => response.json())
         .then((data) => setRunesData(data))
         .catch((error) => console.error("Error loading runes JSON:", error));
+      // Load Items Pathing JSON
+      fetch("/info/itemsPathing.json")
+        .then((response) => response.json())
+        .then((data) => setItemsData(data))
+        .catch((error) => console.error("Error loading items JSON:", error));
     }, []);
 
     const formatDuration = (seconds: number): string => {
@@ -96,6 +103,7 @@ const MatchCard: React.FC<{ match: { metadata: { matchId: string }; info: any } 
         return `https://lolcdn.darkintaqt.com/cdn/spells/${summonerId}`;
     }
 
+    // Get the Icon Path for a Rune given its ID
     const getRuneIconPathById = (runeId: number): string | undefined => {
         for (const path of runesData) {
           for (const slot of path.slots) {
@@ -108,7 +116,7 @@ const MatchCard: React.FC<{ match: { metadata: { matchId: string }; info: any } 
         return undefined; // Si no se encuentra el icono
     };
 
-    // Get the main rune icon URL
+    // Get the main rune icon full URL
     function getMainRuneIconUrl() {
         const mainRuneId = info.participants[participantIndex].perks.styles[0].selections[0].perk;
         // Rune Pathing JSON
@@ -117,6 +125,7 @@ const MatchCard: React.FC<{ match: { metadata: { matchId: string }; info: any } 
         return mainRuneUrl;
     }
 
+    // Get the Icon Path for a Rune Tree given its ID
     const getRuneTreeIconPathById = (treeId: number): string | undefined => {
         const tree = runesData.find((tree: any) => tree.id === treeId);
         return tree ? tree.icon : undefined;
@@ -129,6 +138,30 @@ const MatchCard: React.FC<{ match: { metadata: { matchId: string }; info: any } 
         const secondaryRuneTreeIconPath = getRuneTreeIconPathById(secondaryRuneTreeId);
         const secondaryRuneTreeUrl = `https://ddragon.leagueoflegends.com/cdn/img/${secondaryRuneTreeIconPath}`;
         return secondaryRuneTreeUrl;
+    }
+
+    // Get items
+    const items: string[] = getItems();
+    console.log(items);
+
+    // Function to get the items array
+    function getItems() {
+        const participant = info.participants[participantIndex];
+        return getItemsIconsPathsById(Array.from({ length: 7 }, (_, i) => participant[`item${i}`]));
+    }
+    
+    // Function to get the items icons paths
+    function getItemsIconsPathsById(items: string[]) {
+        return items.map(itemId => {
+            const item = itemsData.find((data: { id: string; }) => data.id === itemId);
+            return item ? mapItemIconPath(item.iconPath) : "";
+        });
+    }
+
+    // Function to map the items icons paths
+    function mapItemIconPath(iconPath: string) {
+        const newIconPath = iconPath.split('/').pop()?.toLowerCase();
+        return ("https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/items/icons2d/" + newIconPath);
     }
 
     return (
@@ -146,17 +179,17 @@ const MatchCard: React.FC<{ match: { metadata: { matchId: string }; info: any } 
             }}>
                 <Grid container spacing={2} alignItems="center" gap={1} sx={{ margin: "0vh 0vh 0vh 0vh"}}>
                     {/* Grid 1 */}
-                    <Grid item xs={2.5} sx={{ padding: "0px 0px 0px 0px", height: "150px" }}>
-                        <Typography sx={{ textAlign: 'center', fontSize: '1rem', fontWeight: 700, color: participantResult === "WIN" ? "rgba(65, 131, 232)" : participantResult === "LOSS" ? "rgba(232, 59, 66)" : "black" }}>{getGameMode(info.queueId)}</Typography>
+                    <Grid item xs={2} sx={{ margin: "0px 0px 0px 0px", height: "150px" }}>
+                        <Typography sx={{ margin: "10px 0px 0px 0px", textAlign: 'center', fontSize: '1rem', fontWeight: 700, color: participantResult === "WIN" ? "rgba(65, 131, 232)" : participantResult === "LOSS" ? "rgba(232, 59, 66)" : "black" }}>{getGameMode(info.queueId)}</Typography>
                         <Typography sx={{ textAlign: 'center', fontSize: '0.9rem', color: 'rgba(150, 145, 135)' }}>a day ago</Typography>
-                        <Divider sx={{ marginY: 1.5 }} />
+                        <Divider sx={{ marginY: 2.2 }} />
                         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
                             <Typography sx={{ textAlign: 'center', fontWeight: 700, color: participantResult === "WIN" ? "rgba(65, 131, 232)" : participantResult === "LOSS" ? "rgba(232, 59, 66)" : "black" }}>{participantResult}</Typography>
-                            <Typography sx={{ textAlign: 'center', color: 'rgba(150, 145, 135)', fontSize: '0.9rem' }}>{formatDuration(info.gameDuration)}</Typography>
+                            <Typography sx={{ alignContent: 'center', textAlign: 'center', color: 'rgba(150, 145, 135)', fontSize: '0.9rem' }}>{formatDuration(info.gameDuration)}</Typography>
                         </Box>
                     </Grid>
                     {/* Grid 2 */}
-                    <Grid item xs={1} sx={{ padding: 2, height: "150px" }}>
+                    <Grid item xs={1.5} sx={{ padding: "0px 10px 0px 0px", height: "150px" }}>
                         <Grid container spacing={2} alignItems="center" justifyContent="center">
                             <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
                                 <Box sx={{ position: "relative", display: "inline-block" }}>
@@ -166,14 +199,14 @@ const MatchCard: React.FC<{ match: { metadata: { matchId: string }; info: any } 
                             </Grid>
                             <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
                                 <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
-                                    <img alt="Summoner Spell 1" src={getSummonerSpellIconUrl(info.participants[participantIndex].summoner1Id)} style={{ width: "30px", height: "30px", borderRadius: "4px" }}/>
-                                    <img alt="Summoner Spell 2" src={getSummonerSpellIconUrl(info.participants[participantIndex].summoner2Id)} style={{ width: "30px", height: "30px", borderRadius: "4px" }}/>
+                                    <img alt="Summoner Spell 1" src={getSummonerSpellIconUrl(info.participants[participantIndex].summoner1Id)} style={{ width: "32px", height: "32px", borderRadius: "4px" }}/>
+                                    <img alt="Summoner Spell 2" src={getSummonerSpellIconUrl(info.participants[participantIndex].summoner2Id)} style={{ width: "32px", height: "32px", borderRadius: "4px" }}/>
                                 </Box>
                             </Grid>
                         </Grid>
                     </Grid>
                     {/* Grid 3 */}
-                    <Grid item xs={4.55} sx={{ padding: 2, height: "150px" }}>
+                    <Grid item xs={4.55} sx={{ padding: "0px 0px 0px 0px", height: "150px" }}>
                         <Grid container spacing={2} alignItems="center">
                             <Grid item xs={4}>
                                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
@@ -189,24 +222,39 @@ const MatchCard: React.FC<{ match: { metadata: { matchId: string }; info: any } 
                                 <Typography>222CS (8.1 Cs/pm)</Typography>
                             </Grid>
                             {/* Parte de abajo */}
-                            <Grid container item xs={12} spacing={2}>
-                                <Grid item xs={2}>
-                                <Typography>ITEM 1</Typography>
+                            <Grid container item xs={12} spacing={1}>
+                                <Grid item xs={1.7}>
+                                    {items[0] ? (<img src={items[0]} alt="First Item" style={{ width: "32px", height: "32px", marginTop: "3px", marginLeft: "0px", borderRadius: "4px" }}/>)
+                                    :
+                                    (<div style={{ width: "32px", height: "32px", marginTop: "3px", marginLeft: "0px", borderRadius: "4px", backgroundColor: "rgba(0, 0, 0, 0.7)" }}/>)}
                                 </Grid>
-                                <Grid item xs={2}>
-                                <Typography>ITEM 2</Typography>
+                                <Grid item xs={1.7}>
+                                    {items[1] ? (<img src={items[1]} alt="Second Item" style={{ width: "32px", height: "32px", marginTop: "3px", marginLeft: "0px", borderRadius: "4px" }}/>)
+                                    :
+                                    (<div style={{ width: "32px", height: "32px", marginTop: "3px", marginLeft: "0px", borderRadius: "4px", backgroundColor: "rgba(0, 0, 0, 0.7)" }}/>)}
                                 </Grid>
-                                <Grid item xs={2}>
-                                <Typography>ITEM 3</Typography>
+                                <Grid item xs={1.7}>
+                                    {items[2] ? (<img src={items[2]} alt="Second Item" style={{ width: "32px", height: "32px", marginTop: "3px", marginLeft: "0px", borderRadius: "4px" }}/>)
+                                    :
+                                    (<div style={{ width: "32px", height: "32px", marginTop: "3px", marginLeft: "0px", borderRadius: "4px", backgroundColor: "rgba(0, 0, 0, 0.7)" }}/>)}
                                 </Grid>
-                                <Grid item xs={2}>
-                                <Typography>ITEM 4</Typography>
+                                <Grid item xs={1.7}>
+                                    {items[3] ? (<img src={items[3]} alt="Second Item" style={{ width: "32px", height: "32px", marginTop: "3px", marginLeft: "0px", borderRadius: "4px" }}/>)
+                                    :
+                                    (<div style={{ width: "32px", height: "32px", marginTop: "3px", marginLeft: "0px", borderRadius: "4px", backgroundColor: "rgba(0, 0, 0, 0.7)" }}/>)}
                                 </Grid>
-                                <Grid item xs={2}>
-                                <Typography>ITEM 5</Typography>
+                                <Grid item xs={1.7}>
+                                    {items[4] ? (<img src={items[4]} alt="Second Item" style={{ width: "32px", height: "32px", marginTop: "3px", marginLeft: "0px", borderRadius: "4px" }}/>)
+                                    :
+                                    (<div style={{ width: "32px", height: "32px", marginTop: "3px", marginLeft: "0px", borderRadius: "4px", backgroundColor: "rgba(0, 0, 0, 0.7)" }}/>)}
                                 </Grid>
-                                <Grid item xs={2}>
-                                <Typography>ITEM 6</Typography>
+                                <Grid item xs={1.7}>
+                                    {items[5] ? (<img src={items[5]} alt="Second Item" style={{ width: "32px", height: "32px", marginTop: "3px", marginLeft: "0px", borderRadius: "4px" }}/>)
+                                    :
+                                    (<div style={{ width: "32px", height: "32px", marginTop: "3px", marginLeft: "0px", borderRadius: "4px", backgroundColor: "rgba(0, 0, 0, 0.7)" }}/>)}
+                                </Grid>
+                                <Grid item xs={1.7}>
+                                    <img src={items[6]} alt="Second Item" style={{ width: "32px", height: "32px", marginTop: "3px", marginLeft: "0px", borderRadius: "12px" }}/>
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -216,51 +264,51 @@ const MatchCard: React.FC<{ match: { metadata: { matchId: string }; info: any } 
                         <Grid container spacing={1} alignItems="center">
                             {/* Grid Equipo Azul */}
                             <Grid item xs={6}>
-                                <Grid container spacing={0} alignItems="center" direction="row">
-                                    <Grid item xs={12} sx={{ display: 'flex', alignItems: 'center' }}>
-                                        <Avatar alt="Champion Icon" src={getChampionIconUrl(info.participants[0].championId)} sx={{ width: "2vh", height: "2vh" }}/>
-                                        <Typography>{info.participants[0].riotIdGameName}</Typography>
+                                <Grid container spacing={0.2} alignItems="center" direction="row">
+                                    <Grid item xs={12} sx={{ display: 'flex', alignItems: 'start', gap: 0.5 }}>
+                                        <Avatar alt="Champion Icon" src={getChampionIconUrl(info.participants[0].championId)} sx={{ width: "20px", height: "20px" }}/>
+                                        <Typography sx={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 100, fontStyle: "italic" }} color="rgba(256, 256, 256, 0.7)">{info.participants[0].riotIdGameName}</Typography>
                                     </Grid>
-                                    <Grid item xs={12} sx={{ display: 'flex', alignItems: 'center' }}>
-                                        <Avatar alt="Champion Icon" src={getChampionIconUrl(info.participants[1].championId)} sx={{ width: "2vh", height: "2vh" }}/>
-                                        <Typography>{info.participants[1].riotIdGameName}</Typography>
+                                    <Grid item xs={12} sx={{ display: 'flex', alignItems: 'start', gap: 0.5 }}>
+                                        <Avatar alt="Champion Icon" src={getChampionIconUrl(info.participants[1].championId)} sx={{ width: "20px", height: "20px" }}/>
+                                        <Typography sx={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 100, fontStyle: "italic" }} color="rgba(256, 256, 256, 0.7)">{info.participants[1].riotIdGameName}</Typography>
                                     </Grid>
-                                    <Grid item xs={12} sx={{ display: 'flex', alignItems: 'center' }}>
-                                        <Avatar alt="Champion Icon" src={getChampionIconUrl(info.participants[2].championId)} sx={{ width: "2vh", height: "2vh" }}/>
-                                        <Typography>{info.participants[2].riotIdGameName}</Typography>
+                                    <Grid item xs={12} sx={{ display: 'flex', alignItems: 'start', gap: 0.5 }}>
+                                        <Avatar alt="Champion Icon" src={getChampionIconUrl(info.participants[2].championId)} sx={{ width: "20px", height: "20px" }}/>
+                                        <Typography sx={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 100, fontStyle: "italic" }} color="rgba(256, 256, 256, 0.7)">{info.participants[2].riotIdGameName}</Typography>
                                     </Grid>
-                                    <Grid item xs={12} sx={{ display: 'flex', alignItems: 'center' }}>
-                                        <Avatar alt="Champion Icon" src={getChampionIconUrl(info.participants[3].championId)} sx={{ width: "2vh", height: "2vh" }}/>
-                                        <Typography>{info.participants[3].riotIdGameName}</Typography>
+                                    <Grid item xs={12} sx={{ display: 'flex', alignItems: 'start', gap: 0.5 }}>
+                                        <Avatar alt="Champion Icon" src={getChampionIconUrl(info.participants[3].championId)} sx={{ width: "20px", height: "20px" }}/>
+                                        <Typography sx={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 100, fontStyle: "italic" }} color="rgba(256, 256, 256, 0.7)">{info.participants[3].riotIdGameName}</Typography>
                                     </Grid>
-                                    <Grid item xs={12} sx={{ display: 'flex', alignItems: 'center' }}>
-                                        <Avatar alt="Champion Icon" src={getChampionIconUrl(info.participants[4].championId)} sx={{ width: "2vh", height: "2vh" }}/>
-                                        <Typography>{info.participants[4].riotIdGameName}</Typography>
+                                    <Grid item xs={12} sx={{ display: 'flex', alignItems: 'start', gap: 0.5 }}>
+                                        <Avatar alt="Champion Icon" src={getChampionIconUrl(info.participants[4].championId)} sx={{ width: "20px", height: "20px" }}/>
+                                        <Typography sx={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 100, fontStyle: "italic" }} color="rgba(256, 256, 256, 0.7)">{info.participants[4].riotIdGameName}</Typography>
                                     </Grid>
                                 </Grid>
                             </Grid>
                             {/* Grid Equipo Rojo */}
                             <Grid item xs={6}>
-                                <Grid container spacing={0} alignItems="center" direction="row">
-                                    <Grid item xs={12} sx={{ display: 'flex', alignItems: 'center' }}>
-                                        <Avatar alt="Champion Icon" src={getChampionIconUrl(info.participants[5].championId)} sx={{ width: "2vh", height: "2vh" }}/>
-                                        <Typography>Player 6</Typography>
+                                <Grid container spacing={0.2} alignItems="center" direction="row">
+                                    <Grid item xs={12} sx={{ display: 'flex', alignItems: 'start', gap: 0.5 }}>
+                                        <Avatar alt="Champion Icon" src={getChampionIconUrl(info.participants[5].championId)} sx={{ width: "20px", height: "20px" }}/>
+                                        <Typography sx={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 100, fontStyle: "italic" }} color="rgba(256, 256, 256, 0.7)">{info.participants[5].riotIdGameName}</Typography>
                                     </Grid>
-                                    <Grid item xs={12} sx={{ display: 'flex', alignItems: 'center' }}>
-                                        <Avatar alt="Champion Icon" src={getChampionIconUrl(info.participants[6].championId)} sx={{ width: "2vh", height: "2vh" }}/>
-                                        <Typography>Player 7</Typography>
+                                    <Grid item xs={12} sx={{ display: 'flex', alignItems: 'start', gap: 0.5 }}>
+                                        <Avatar alt="Champion Icon" src={getChampionIconUrl(info.participants[6].championId)} sx={{ width: "20px", height: "20px" }}/>
+                                        <Typography sx={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 100, fontStyle: "italic" }} color="rgba(256, 256, 256, 0.7)">{info.participants[6].riotIdGameName}</Typography>
                                     </Grid>
-                                    <Grid item xs={12} sx={{ display: 'flex', alignItems: 'center' }}>
-                                        <Avatar alt="Champion Icon" src={getChampionIconUrl(info.participants[7].championId)} sx={{ width: "2vh", height: "2vh" }}/>
-                                        <Typography>Player 8</Typography>
+                                    <Grid item xs={12} sx={{ display: 'flex', alignItems: 'start', gap: 0.5 }}>
+                                        <Avatar alt="Champion Icon" src={getChampionIconUrl(info.participants[7].championId)} sx={{ width: "20px", height: "20px" }}/>
+                                        <Typography sx={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 100, fontStyle: "italic" }} color="rgba(256, 256, 256, 0.7)">{info.participants[7].riotIdGameName}</Typography>
                                     </Grid>
-                                    <Grid item xs={12} sx={{ display: 'flex', alignItems: 'center' }}>
-                                        <Avatar alt="Champion Icon" src={getChampionIconUrl(info.participants[8].championId)} sx={{ width: "2vh", height: "2vh" }}/>
-                                        <Typography>Player 9</Typography>
+                                    <Grid item xs={12} sx={{ display: 'flex', alignItems: 'start', gap: 0.5 }}>
+                                        <Avatar alt="Champion Icon" src={getChampionIconUrl(info.participants[8].championId)} sx={{ width: "20px", height: "20px" }}/>
+                                        <Typography sx={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 100, fontStyle: "italic" }} color="rgba(256, 256, 256, 0.7)">{info.participants[8].riotIdGameName}</Typography>
                                     </Grid>
-                                    <Grid item xs={12} sx={{ display: 'flex', alignItems: 'center' }}>
-                                        <Avatar alt="Champion Icon" src={getChampionIconUrl(info.participants[9].championId)} sx={{ width: "2vh", height: "2vh" }}/>
-                                        <Typography>Player 10</Typography>
+                                    <Grid item xs={12} sx={{ display: 'flex', alignItems: 'start', gap: 0.5 }}>
+                                        <Avatar alt="Champion Icon" src={getChampionIconUrl(info.participants[9].championId)} sx={{ width: "20px", height: "20px" }}/>
+                                        <Typography sx={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 100, fontStyle: "italic" }} color="rgba(256, 256, 256, 0.7)">{info.participants[9].riotIdGameName}</Typography>
                                     </Grid>
                                 </Grid>
                             </Grid>

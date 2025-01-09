@@ -46,19 +46,20 @@ const SummonerView: React.FC = () => {
     }
   };
 
+  console.log(searchData);
   // Retrieve profile details
   const profileIconUrl = `https://ddragon-webp.lolmath.net/latest/img/profileicon/${searchData.profileDetails.profileIconId}.webp`;
   const summonerLevel = searchData.profileDetails.summonerLevel;
-  const soloDuoTierCaps = searchData.summonerEntries[0].tier;
+  const soloDuoTierCaps = searchData.summonerEntries[0] ? searchData.summonerEntries[0].tier : "UNRANKED";
   const soloDuoTier = soloDuoTierCaps.charAt(0).toUpperCase() + soloDuoTierCaps.slice(1).toLowerCase();
   const soloDuoTierBadgeUrl = `https://wiki.leagueoflegends.com/en-us/images/Season_2023_-_${soloDuoTier}.png`;
-  const soloDuoRankRoman = searchData.summonerEntries[0].rank;
+  const soloDuoRankRoman = searchData.summonerEntries[0] ? searchData.summonerEntries[0].rank : "";
   const soloDuoRank = romanToInt(soloDuoRankRoman);
-  const flexTierCaps = searchData.summonerEntries[1].tier;
-  const flexTier = soloDuoTierCaps.charAt(0).toUpperCase() + soloDuoTierCaps.slice(1).toLowerCase();
-  const flexTierBadgeUrl = `https://wiki.leagueoflegends.com/en-us/Category:Season_2023_rank_badges#/media/File:Season_2023_-_${flexTier}.png`;
-  const flexDuoRankRoman = searchData.summonerEntries[1].rank;
-  const flexDuoRank = romanToInt(soloDuoRankRoman);
+  // const flexTierCaps = searchData.summonerEntries[1].tier;
+  // const flexTier = soloDuoTierCaps.charAt(0).toUpperCase() + soloDuoTierCaps.slice(1).toLowerCase();
+  // const flexTierBadgeUrl = `https://wiki.leagueoflegends.com/en-us/Category:Season_2023_rank_badges#/media/File:Season_2023_-_${flexTier}.png`;
+  // const flexDuoRankRoman = searchData.summonerEntries[1].rank;
+  // const flexDuoRank = romanToInt(soloDuoRankRoman);
 
   console.log(searchData);
 
@@ -84,7 +85,7 @@ const SummonerView: React.FC = () => {
                     <Box sx={{ position: "relative", display: "inline-block", textAlign: "center", width: "100%" }}>
                       <img alt="Tier Badge" src={soloDuoTierBadgeUrl} style={{ height: "15vh", width: "15vh", transform: "translateY(-10%)" }} />
                       <Typography sx={{ position: "absolute", bottom: "5%", left: "50%", transform: "translateX(-50%)", width: "100%", fontWeight: 700 }} color="white">
-                        {searchData.summonerEntries[0].tier} {searchData.summonerEntries[0].rank}
+                        {soloDuoTierCaps} {soloDuoRankRoman}
                       </Typography>
                     </Box>
                   </Grid>
