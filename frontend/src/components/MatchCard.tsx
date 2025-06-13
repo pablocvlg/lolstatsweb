@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Avatar, Box, Card, CardContent, Divider, Grid, Typography } from "@mui/material";
-import { Padding } from "@mui/icons-material";
 
 const MatchCard: React.FC<{ match: { metadata: { matchId: string }; info: any } }> = ({ match }) => {
 
