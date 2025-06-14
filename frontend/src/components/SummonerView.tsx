@@ -1,4 +1,4 @@
-import { Box, Typography, Avatar, Card, Grid } from "@mui/material";
+import { Box, Typography, Avatar, Grid } from "@mui/material";
 import { useParams } from "react-router-dom";
 import NavBar from "./NavegationBar";
 import MatchCard from "./MatchCard";
@@ -30,36 +30,15 @@ const SummonerView: React.FC = () => {
   const storedData = sessionStorage.getItem('summonerInfo');
   const searchData = storedData ? JSON.parse(storedData) : null;
 
-  // Function to obtain the ranks
-  const romanToInt = (roman: string): number => {
-    switch (roman) {
-      case "I":
-        return 1;
-      case "II":
-        return 2;
-      case "III":
-        return 3;
-      case "IV":
-        return 4;
-      default:
-        return 0;  // En caso de que el valor no sea válido
-    }
-  };
-
   console.log(searchData);
   // Retrieve profile details
   const profileIconUrl = `https://ddragon-webp.lolmath.net/latest/img/profileicon/${searchData.profileDetails.profileIconId}.webp`;
   const summonerLevel = searchData.profileDetails.summonerLevel;
-  const soloDuoTierCaps = searchData.summonerEntries[0] ? searchData.summonerEntries[0].tier : "UNRANKED";
+  const rankedSoloEntry = searchData.summonerEntries.find((entry: { queueType: string; }) => entry.queueType === 'RANKED_SOLO_5x5');
+  const soloDuoTierCaps = rankedSoloEntry ? rankedSoloEntry.tier : "UNRANKED";
   const soloDuoTier = soloDuoTierCaps.charAt(0).toUpperCase() + soloDuoTierCaps.slice(1).toLowerCase();
   const soloDuoTierBadgeUrl = `https://wiki.leagueoflegends.com/en-us/images/Season_2023_-_${soloDuoTier}.png`;
-  const soloDuoRankRoman = searchData.summonerEntries[0] ? searchData.summonerEntries[0].rank : "";
-  const soloDuoRank = romanToInt(soloDuoRankRoman);
-  // const flexTierCaps = searchData.summonerEntries[1].tier;
-  // const flexTier = soloDuoTierCaps.charAt(0).toUpperCase() + soloDuoTierCaps.slice(1).toLowerCase();
-  // const flexTierBadgeUrl = `https://wiki.leagueoflegends.com/en-us/Category:Season_2023_rank_badges#/media/File:Season_2023_-_${flexTier}.png`;
-  // const flexDuoRankRoman = searchData.summonerEntries[1].rank;
-  // const flexDuoRank = romanToInt(soloDuoRankRoman);
+  const soloDuoRankRoman = rankedSoloEntry ? rankedSoloEntry.rank : "";
 
   console.log(searchData);
 
@@ -101,24 +80,15 @@ const SummonerView: React.FC = () => {
           }}>
             <div style={{ 
               flex: 0.6,
-              backgroundColor: "#C0C0C0",
               color: "black",
               margin: "20vh 10vh 0vh 10vh",
               height: "40vh"
              }}>
-              <h2>
-                OTHER GAMEMODES
-              </h2>
              </div>
             {searchData.matchDetails && (
             <div style={{ flex: 2.5, marginTop: "5vh", marginBottom: "10vh" }}>
-              <Box>
-                <Card sx={{ width: "100%", height: "10vh", backgroundColor: "#C0C0C0", color: "black" }}>
-                  <Typography variant="h4" align="center">RANKED SELECTOR</Typography>
-                </Card>
-              </Box>
-              <Box sx={{ marginTop: "5vh", width: "100%", display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', border: '1px solid black', padding: "3vh 0vh 3vh 0vh" }}>
-                <Typography height="5vh" width="50%" variant="h6" borderBottom="1px solid white" marginBottom={ "1vh" } color="white" textAlign="center">MATCH HISTORY</Typography>
+              <Box sx={{ marginTop: "2vh", width: "100%", display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', border: '1px solid black', padding: "3vh 0vh 3vh 0vh" }}>
+                <Typography height="6vh" width="50%" variant="h6" borderBottom="1px solid white" marginTop={ "1vh" } marginBottom={ "1vh" } color="white" textAlign="center">MATCH HISTORY</Typography>
                 <div style={{ overflowY: 'auto', width: '95%' }}>
                   {searchData.matchDetails.map((match: { metadata: { matchId: string }; info: any}, index: number) => (
                     <MatchCard key={match.metadata.matchId} match={match}/>
@@ -129,15 +99,11 @@ const SummonerView: React.FC = () => {
             )}
             <div style={{ 
               flex: 0.6,
-              backgroundColor: "#C0C0C0",
               color: "black",
               margin: "20vh 10vh 0vh 10vh",
               height: "40vh"
              }}
              >
-              <h2>
-                STATISTICS
-              </h2>
              </div>
           </div>
           <Box sx={{ backgroundColor: "rgba(25, 25, 25)", height: "30vh", display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", opacity:"1" }}>
