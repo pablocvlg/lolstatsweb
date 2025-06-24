@@ -222,6 +222,7 @@ async def get_summoner_entries(region: str, summoner_id: str):
         )
 
     # Build Riot's API URL
+    # Deprecated, will need to use /entries/by-puuid/{puuid}
     url = f"https://{region}.api.riotgames.com/lol/league/v4/entries/by-summoner/{summoner_id}"
 
     # Configure headers with Riot's API Key
