@@ -266,23 +266,23 @@ const MatchCard: React.FC<{ match: { metadata: { matchId: string }; info: any } 
                                 <Grid container spacing={0.2} alignItems="center" direction="row">
                                     <Grid item xs={12} sx={{ display: 'flex', alignItems: 'start', gap: 0.5 }}>
                                         <Avatar alt="Champion Icon" src={getChampionIconUrl(info.participants[0].championId)} sx={{ width: "20px", height: "20px" }}/>
-                                        <Typography sx={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 100, fontStyle: "italic" }} color="rgba(256, 256, 256, 0.7)">{info.participants[0].riotIdGameName}</Typography>
+                                        <Typography sx={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 100, fontStyle: "italic" }} color="rgba(256, 256, 256, 0.7)">{info.participants[0].riotIdGameName.length > 10 ? `${info.participants[0].riotIdGameName.slice(0, 8)}...` : info.participants[0].riotIdGameName}</Typography>
                                     </Grid>
                                     <Grid item xs={12} sx={{ display: 'flex', alignItems: 'start', gap: 0.5 }}>
                                         <Avatar alt="Champion Icon" src={getChampionIconUrl(info.participants[1].championId)} sx={{ width: "20px", height: "20px" }}/>
-                                        <Typography sx={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 100, fontStyle: "italic" }} color="rgba(256, 256, 256, 0.7)">{info.participants[1].riotIdGameName}</Typography>
+                                        <Typography sx={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 100, fontStyle: "italic" }} color="rgba(256, 256, 256, 0.7)">{info.participants[1].riotIdGameName.length > 10 ? `${info.participants[1].riotIdGameName.slice(0, 8)}...` : info.participants[1].riotIdGameName}</Typography>
                                     </Grid>
                                     <Grid item xs={12} sx={{ display: 'flex', alignItems: 'start', gap: 0.5 }}>
                                         <Avatar alt="Champion Icon" src={getChampionIconUrl(info.participants[2].championId)} sx={{ width: "20px", height: "20px" }}/>
-                                        <Typography sx={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 100, fontStyle: "italic" }} color="rgba(256, 256, 256, 0.7)">{info.participants[2].riotIdGameName}</Typography>
+                                        <Typography sx={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 100, fontStyle: "italic" }} color="rgba(256, 256, 256, 0.7)">{info.participants[2].riotIdGameName.length > 10 ? `${info.participants[2].riotIdGameName.slice(0, 8)}...` : info.participants[2].riotIdGameName}</Typography>
                                     </Grid>
                                     <Grid item xs={12} sx={{ display: 'flex', alignItems: 'start', gap: 0.5 }}>
                                         <Avatar alt="Champion Icon" src={getChampionIconUrl(info.participants[3].championId)} sx={{ width: "20px", height: "20px" }}/>
-                                        <Typography sx={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 100, fontStyle: "italic" }} color="rgba(256, 256, 256, 0.7)">{info.participants[3].riotIdGameName}</Typography>
+                                        <Typography sx={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 100, fontStyle: "italic" }} color="rgba(256, 256, 256, 0.7)">{info.participants[3].riotIdGameName.length > 10 ? `${info.participants[3].riotIdGameName.slice(0, 8)}...` : info.participants[3].riotIdGameName}</Typography>
                                     </Grid>
                                     <Grid item xs={12} sx={{ display: 'flex', alignItems: 'start', gap: 0.5 }}>
                                         <Avatar alt="Champion Icon" src={getChampionIconUrl(info.participants[4].championId)} sx={{ width: "20px", height: "20px" }}/>
-                                        <Typography sx={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 100, fontStyle: "italic" }} color="rgba(256, 256, 256, 0.7)">{info.participants[4].riotIdGameName}</Typography>
+                                        <Typography sx={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 100, fontStyle: "italic" }} color="rgba(256, 256, 256, 0.7)">{info.participants[4].riotIdGameName.length > 10 ? `${info.participants[4].riotIdGameName.slice(0, 8)}...` : info.participants[4].riotIdGameName}</Typography>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -291,23 +291,23 @@ const MatchCard: React.FC<{ match: { metadata: { matchId: string }; info: any } 
                                 <Grid container spacing={0.2} alignItems="center" direction="row">
                                     <Grid item xs={12} sx={{ display: 'flex', alignItems: 'start', gap: 0.5 }}>
                                         <Avatar alt="Champion Icon" src={getChampionIconUrl(info.participants[5].championId)} sx={{ width: "20px", height: "20px" }}/>
-                                        <Typography sx={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 100, fontStyle: "italic" }} color="rgba(256, 256, 256, 0.7)">{info.participants[5].riotIdGameName}</Typography>
+                                        <Typography sx={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 100, fontStyle: "italic" }} color="rgba(256, 256, 256, 0.7)">{info.participants[5].riotIdGameName.length > 10 ? `${info.participants[5].riotIdGameName.slice(0, 8)}...` : info.participants[5].riotIdGameName}</Typography>
                                     </Grid>
                                     <Grid item xs={12} sx={{ display: 'flex', alignItems: 'start', gap: 0.5 }}>
                                         <Avatar alt="Champion Icon" src={getChampionIconUrl(info.participants[6].championId)} sx={{ width: "20px", height: "20px" }}/>
-                                        <Typography sx={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 100, fontStyle: "italic" }} color="rgba(256, 256, 256, 0.7)">{info.participants[6].riotIdGameName}</Typography>
+                                        <Typography sx={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 100, fontStyle: "italic" }} color="rgba(256, 256, 256, 0.7)">{info.participants[6].riotIdGameName.length > 10 ? `${info.participants[6].riotIdGameName.slice(0, 8)}...` : info.participants[6].riotIdGameName}</Typography>
                                     </Grid>
                                     <Grid item xs={12} sx={{ display: 'flex', alignItems: 'start', gap: 0.5 }}>
                                         <Avatar alt="Champion Icon" src={getChampionIconUrl(info.participants[7].championId)} sx={{ width: "20px", height: "20px" }}/>
-                                        <Typography sx={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 100, fontStyle: "italic" }} color="rgba(256, 256, 256, 0.7)">{info.participants[7].riotIdGameName}</Typography>
+                                        <Typography sx={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 100, fontStyle: "italic" }} color="rgba(256, 256, 256, 0.7)">{info.participants[7].riotIdGameName.length > 10 ? `${info.participants[7].riotIdGameName.slice(0, 8)}...` : info.participants[7].riotIdGameName}</Typography>
                                     </Grid>
                                     <Grid item xs={12} sx={{ display: 'flex', alignItems: 'start', gap: 0.5 }}>
                                         <Avatar alt="Champion Icon" src={getChampionIconUrl(info.participants[8].championId)} sx={{ width: "20px", height: "20px" }}/>
-                                        <Typography sx={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 100, fontStyle: "italic" }} color="rgba(256, 256, 256, 0.7)">{info.participants[8].riotIdGameName}</Typography>
+                                        <Typography sx={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 100, fontStyle: "italic" }} color="rgba(256, 256, 256, 0.7)">{info.participants[8].riotIdGameName.length > 10 ? `${info.participants[8].riotIdGameName.slice(0, 8)}...` : info.participants[8].riotIdGameName}</Typography>
                                     </Grid>
                                     <Grid item xs={12} sx={{ display: 'flex', alignItems: 'start', gap: 0.5 }}>
                                         <Avatar alt="Champion Icon" src={getChampionIconUrl(info.participants[9].championId)} sx={{ width: "20px", height: "20px" }}/>
-                                        <Typography sx={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 100, fontStyle: "italic" }} color="rgba(256, 256, 256, 0.7)">{info.participants[9].riotIdGameName}</Typography>
+                                        <Typography sx={{ fontFamily: "'Josefin Sans', sans-serif", fontWeight: 100, fontStyle: "italic" }} color="rgba(256, 256, 256, 0.7)">{info.participants[9].riotIdGameName.length > 10 ? `${info.participants[9].riotIdGameName.slice(0, 8)}...` : info.participants[9].riotIdGameName}</Typography>
                                     </Grid>
                                 </Grid>
                             </Grid>
