@@ -204,26 +204,25 @@ async def get_match_details(region: str, match_id: str):
     return response.json()
 
 # Route to get the entires for a summoner
-@router.get("/entries/{region}/{summoner_id}")
-async def get_summoner_entries(region: str, summoner_id: str):
+@router.get("/entries/{region}/{puuid}")
+async def get_summoner_entries(region: str, puuid: str):
     
     """
     Obtain a match's details using its ID
 
     - region: Summoner's region (e.g., "euw1", "na1").
-    - summoner_id: A summoner's encrypted ID
+    - puuid: A summoner's ID (retrieved using his name and tag).
     """
 
     # Make sure the parameters are properly introduced (I could make the front check all this)
-    if not summoner_id.strip():
+    if not puuid.strip():
         raise HTTPException(
             status_code=400,
             detail="The summoner's encrypted ID cannot be empty."
         )
 
     # Build Riot's API URL
-    # Deprecated, will need to use /entries/by-puuid/{puuid}
-    url = f"https://{region}.api.riotgames.com/lol/league/v4/entries/by-summoner/{summoner_id}"
+    url = f"https://{region}.api.riotgames.com/lol/league/v4/entries/by-puuid/{puuid}"
 
     # Configure headers with Riot's API Key
     headers = {

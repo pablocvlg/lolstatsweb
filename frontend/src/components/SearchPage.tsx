@@ -48,7 +48,7 @@ const SearchPage: React.FC = () => {
       setProgress(30);
 
       // Obtain summoner's entries
-      const summonerEntries = await getSummonerEntries(profileDetails.id);
+      const summonerEntries = await getSummonerEntries(puuid);
 
       // Set loading progress to 40%
       setProgress(40);
@@ -110,8 +110,8 @@ const SearchPage: React.FC = () => {
   };
 
   // Function to get summoner entries
-  const getSummonerEntries = async (summoner_id: string) => {
-    const profileDetailsUrl = `http://localhost:8000/entries/euw1/${summoner_id}`;
+  const getSummonerEntries = async (puuid: string) => {
+    const profileDetailsUrl = `http://localhost:8000/entries/euw1/${puuid}`;
     try {
         const response = await fetch(profileDetailsUrl);
         if (response.ok) {
