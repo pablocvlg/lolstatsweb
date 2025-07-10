@@ -1,11 +1,10 @@
-/* Elimina los márgenes y el relleno de todo el documento */
 * {
     margin: 0;
     padding: 0;
-    box-sizing: border-box; /* Para que el padding y el border no afecten el tamaño total de los elementos */
+    box-sizing: border-box;
   }
   
-  /* Asegúrate de que el HTML ocupe toda la pantalla */
+  /* Make sure HTML covers the entire screen */
   html, body {
     height: 100%;
     width: 100%;
